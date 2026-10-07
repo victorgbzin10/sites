@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Barbearia Cubana — Agende seu corte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6efe2;--card:#fffaf0;--ink:#1b1b1b;--mut:#6b6459;--red:#c8102e;--blue:#0b2a4a;--gold:#b98a2e;--line:#e2d6bf;--on:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1620;--card:#142334;--ink:#f3ecdc;--mut:#a9b2bd;--red:#e0344f;--blue:#1d4d80;--gold:#d9a94a;--line:#26394e}}
+:root[data-theme="dark"]{--bg:#0d1620;--card:#142334;--ink:#f3ecdc;--mut:#a9b2bd;--red:#e0344f;--blue:#1d4d80;--gold:#d9a94a;--line:#26394e}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.5}
+h1,h2,h3{font-family:"Bebas Neue",Impact,sans-serif;letter-spacing:.04em;margin:0;font-weight:400}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+.stripe{height:8px;background:linear-gradient(90deg,var(--blue) 0 33%,#fff 33% 40%,var(--red) 40% 60%,#fff 60% 67%,var(--blue) 67%)}
+header.hero{background:var(--blue);color:#fff;padding:56px 0 48px;text-align:center}
+.hero small{letter-spacing:.3em;color:var(--gold);font-weight:600}
+.hero h1{font-size:clamp(48px,12vw,96px);line-height:1}
+.hero p{max-width:480px;margin:10px auto 22px;opacity:.9}
+.btn{display:inline-block;background:var(--red);color:#fff;border:0;border-radius:8px;padding:12px 22px;font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+section{padding:36px 0}section>.wrap>h2{font-size:34px;margin-bottom:14px;color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.svc{cursor:pointer;text-align:left;font:inherit;color:inherit;transition:.15s}.svc:hover{border-color:var(--gold)}
+.svc.on{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}.svc b{display:block;font-size:17px}.svc span{color:var(--mut);font-size:13px}.svc em{display:block;margin-top:6px;font-style:normal;font-weight:600;color:var(--gold)}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+input{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.step{margin-top:20px}.step h3{font-size:22px;margin-bottom:8px}.step h3 i{font-style:normal;background:var(--blue);color:#fff;border-radius:50%;display:inline-block;width:26px;height:26px;text-align:center;line-height:26px;font-size:15px;margin-right:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:9px 13px;font:600 14px Inter,sans-serif;cursor:pointer;text-align:center}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff}.chip:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.days .chip{min-width:62px}.days small{display:block;font-weight:400;font-size:11px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}.mut{color:var(--mut);font-size:14px}.hide{display:none}
+.ok{background:var(--blue);color:#fff;border-radius:10px;padding:14px;margin-top:14px}
+footer{background:var(--blue);color:#fff;text-align:center;padding:26px 18px;font-size:14px}
+.wide{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<header class="hero"><div class="wrap">
+<small>★ DESDE 2015 ★</small>
+<h1>Barbearia Cubana</h1>
+<p>Tradição, navalha e estilo. Faça seu cadastro e reserve seu horário em poucos cliques.</p>
+<a class="btn" href="#agendar">Agendar meu corte</a>
+</div></header>
+
+<section><div class="wrap">
+<h2>Serviços</h2>
+<div class="grid" id="svcInfo"></div>
+<p class="mut" style="margin-top:12px">Atendimento: segunda a sexta 9h–19h · sábado 9h–16h · domingo fechado.</p>
+</div></section>
+
+<section id="agendar" style="background:var(--card)"><div class="wrap">
+<h2>Agendar</h2>
+<p class="mut" id="modeMsg"></p>
+
+<div class="step" id="cadBox">
+<h3><i>1</i>Seu cadastro</h3>
+<div id="cadForm" class="card">
+<label for="nome">Nome completo</label><input id="nome" autocomplete="name">
+<label for="tel">WhatsApp</label><input id="tel" type="tel" inputmode="tel" placeholder="(61) 90000-0000" autocomplete="tel">
+<label for="mail">E-mail</label><input id="mail" type="email" autocomplete="email">
+<p id="cadErr" class="mut" style="color:var(--red)"></p>
+<button class="btn" id="cadBtn">Salvar cadastro</button>
+</div>
+<div id="cadOk" class="card hide row"><span id="cadHello"></span><button class="btn ghost" id="cadEdit">Editar dados</button></div>
+</div>
+
+<div id="booking" class="hide">
+<div class="step"><h3><i>2</i>Escolha o serviço</h3><div class="grid" id="svcPick"></div></div>
+<div class="step"><h3><i>3</i>Escolha a data</h3><div class="chips days" id="days"></div></div>
+<div class="step"><h3><i>4</i>Escolha o horário</h3><div class="chips" id="times"><span class="mut">Selecione uma data.</span></div></div>
+<div class="step"><button class="btn" id="confirm" disabled>Confirmar agendamento</button><div id="done"></div></div>
+</div>
+</div></section>
+
+<section id="meus" class="hide"><div class="wrap">
+<h2>Meus agendamentos</h2><div class="card" id="mine"></div>
+</div></section>
+
+<section id="painel" class="hide" style="background:var(--card)"><div class="wrap">
+<h2>Painel do barbeiro</h2><div class="card wide" id="all"></div>
+</div></section>
+
+<footer>© Barbearia Cubana · Segunda a sábado · Agende online</footer>
+
+<script>
+const SERV=[{id:'corte',n:'Corte clássico',d:'Tesoura e máquina',m:30,p:45},{id:'barba',n:'Barba na navalha',d:'Toalha quente',m:30,p:35},{id:'combo',n:'Corte + Barba',d:'O pacote completo',m:60,p:70},{id:'sobr',n:'Sobrancelha',d:'Acabamento na navalha',m:15,p:15}];
+const DN=['dom','seg','ter','qua','qui','sex','sáb'];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const brl=n=>'R$ '+n.toFixed(2).replace('.',',');
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const fmtDate=s=>{const [y,m,d]=s.split('-');return d+'/'+m+'/'+y};
+let db=null,uid=null,isOwner=false,slots={},client=ls.get('cliente'),sel={svc:null,date:null,time:null};
+
+function times(date){const d=new Date(date+'T12:00:00'),w=d.getDay(),end=w===6?16:19,out=[];
+ for(let h=9;h<end;h++){out.push(String(h).padStart(2,'0')+':00');out.push(String(h).padStart(2,'0')+':30')}return out}
+const key=(d,t)=>d+'_'+t.replace(':','');
+
+function renderInfo(){$('svcInfo').innerHTML=SERV.map(s=>`<div class="card"><b>${s.n}</b><br><span class="mut">${s.d} · ${s.m} min</span><br><b style="color:var(--gold)">${brl(s.p)}</b></div>`).join('')}
+function renderPick(){$('svcPick').innerHTML=SERV.map(s=>`<button class="card svc ${sel.svc===s.id?'on':''}" data-s="${s.id}"><b>${s.n}</b><span>${s.m} min</span><em>${brl(s.p)}</em></button>`).join('');
+ $('svcPick').querySelectorAll('button').forEach(b=>b.onclick=()=>{sel.svc=b.dataset.s;renderPick();upd()})}
+function renderDays(){const out=[],n=new Date();
+ for(let i=0;i<21&&out.length<14;i++){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()+i);if(d.getDay()===0)continue;out.push(d)}
+ $('days').innerHTML=out.map(d=>`<button class="chip ${sel.date===iso(d)?'on':''}" data-d="${iso(d)}"><small>${DN[d.getDay()]}</small>${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}</button>`).join('');
+ $('days').querySelectorAll('button').forEach(b=>b.onclick=()=>{sel.date=b.dataset.d;sel.time=null;renderDays();renderTimes();upd()})}
+function renderTimes(){if(!sel.date)return;const today=iso(new Date()),now=new Date().getHours()*60+new Date().getMinutes();
+ $('times').innerHTML=times(sel.date).map(t=>{const [h,m]=t.split(':').map(Number);
+  const taken=!!slots[key(sel.date,t)],past=sel.date===today&&h*60+m<=now;
+  return `<button class="chip ${sel.time===t?'on':''}" data-t="${t}" ${taken||past?'disabled':''}>${t}</button>`}).join('');
+ $('times').querySelectorAll('button').forEach(b=>b.onclick=()=>{sel.time=b.dataset.t;renderTimes();upd()})}
+function upd(){$('confirm').disabled=!(sel.svc&&sel.date&&sel.time)}
+
+function renderLists(){
+ const today=iso(new Date()),mine=Object.entries(slots).filter(([k,v])=>uid?v.uid===uid:v.local).filter(([k,v])=>v.date>=today).sort();
+ $('meus').classList.toggle('hide',!client);
+ $('mine').innerHTML=mine.length?mine.map(([k,v])=>`<div class="row"><span><b>${esc(v.svcName)}</b><br><span class="mut">${fmtDate(v.date)} às ${v.time}</span></span><button class="btn ghost" data-c="${k}">Cancelar</button></div>`).join(''):'<span class="mut">Você ainda não tem agendamentos.</span>';
+ $('mine').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>cancel(b.dataset.c));
+ if(isOwner){$('painel').classList.remove('hide');
+  const all=Object.entries(slots).filter(([k,v])=>v.date>=today).sort();
+  $('all').innerHTML=all.length?all.map(([k,v])=>`<div class="row"><span><b>${fmtDate(v.date)} ${v.time}</b> — ${esc(v.name)}<br><span class="mut">${esc(v.svcName)}</span></span><button class="btn ghost" data-c="${k}">Remover</button></div>`).join(''):'<span class="mut">Nenhum agendamento futuro.</span>';
+  $('all').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>cancel(b.dataset.c))}
+}
+function render(){renderTimes();renderLists()}
+
+async function cancel(k){if(!confirm('Cancelar este horário?'))return;
+ try{if(db)await db.doc('slots/'+k).delete();else{delete slots[k];ls.set('slots',slots)}}catch(e){alert('Não foi possível cancelar agora.')}
+ render()}
+
+function showClient(){const has=!!client;$('cadForm').classList.toggle('hide',has);$('cadOk').classList.toggle('hide',!has);$('booking').classList.toggle('hide',!has);
+ if(has)$('cadHello').innerHTML='Olá, <b>'+esc(client.nome.split(' ')[0])+'</b>! Cadastro ok.';renderLists()}
+
+$('cadBtn').onclick=async()=>{const nome=$('nome').value.trim(),tel=$('tel').value.trim(),mail=$('mail').value.trim();
+ const dig=tel.replace(/\D/g,'');
+ if(nome.length<3)return $('cadErr').textContent='Informe seu nome completo.';
+ if(dig.length<10)return $('cadErr').textContent='Informe um WhatsApp válido com DDD.';
+ if(!/^\S+@\S+\.\S+$/.test(mail))return $('cadErr').textContent='Informe um e-mail válido.';
+ $('cadErr').textContent='';client={nome,tel,mail};ls.set('cliente',client);
+ try{if(db&&uid)await db.doc('data/users/'+uid+'/profile').set(client)}catch(e){}
+ showClient()};
+$('cadEdit').onclick=()=>{$('nome').value=client.nome;$('tel').value=client.tel;$('mail').value=client.mail;client=null;showClient()};
+
+$('confirm').onclick=async()=>{const s=SERV.find(x=>x.id===sel.svc),k=key(sel.date,sel.time);
+ $('confirm').disabled=true;
+ try{
+  if(db){const cur=await db.doc('slots/'+k).get();if(cur.exists){$('done').innerHTML='<div class="ok">Esse horário acabou de ser reservado. Escolha outro.</div>';sel.time=null;renderTimes();return}}
+  else if(slots[k]){return}
+  const rec={date:sel.date,time:sel.time,svc:s.id,svcName:s.n,name:client.nome,uid:uid||null,local:!db};
+  if(db)await db.doc('slots/'+k).set(rec);else{slots[k]=rec;ls.set('slots',slots)}
+  $('done').innerHTML=`<div class="ok"><b>Agendado!</b> ${esc(client.nome.split(' ')[0])}, seu horário: <b>${esc(s.n)}</b> em <b>${fmtDate(sel.date)} às ${sel.time}</b>. Chegue 5 minutos antes.</div>`;
+  sel={svc:null,date:null,time:null};renderPick();renderDays();$('times').innerHTML='<span class="mut">Selecione uma data.</span>';
+ }catch(e){$('done').innerHTML='<div class="ok" style="background:var(--red)">Não foi possível agendar agora. Tente novamente.</div>'}
+ upd();render()};
+
+async function init(){
+ renderInfo();renderPick();renderDays();showClient();
+ try{if(window.claude){const u=await claude.use('user');if(u){uid=await u.id();isOwner=await u.isOwner()}db=await claude.use('db')}}catch(e){db=null}
+ if(db&&uid){$('modeMsg').textContent='';
+  try{const p=await db.doc('data/users/'+uid+'/profile').get();if(p.exists&&!client){client=p.data();ls.set('cliente',client);showClient()}}catch(e){}
+  db.collection('slots').onSnapshot(s=>{slots={};s.docs.forEach(d=>slots[d.id]=d.data());render()},()=>{});
+ }else{db=null;slots=ls.get('slots')||{};$('modeMsg').textContent='Modo demonstração: os agendamentos ficam salvos apenas neste navegador.';render()}
+}
+init();
+</script>
+</body>
+</html>
